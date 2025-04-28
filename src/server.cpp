@@ -10,17 +10,17 @@
 #include <iostream>
 
 #define CLNT_MAX 10
-#define BUFfSIZE 200
+#define BUFFSIZE 200
 int g_clnt_socks[CLNT_MAX];
 int g_clnt_count = 0;
 void *clnt_connection(void *arg) {
 
     int clnt_sock = *reinterpret_cast<int *>(arg);
-    char msg[BUFfSIZE];
+    char msg[BUFFSIZE];
     int str_len = 0;
     int i;
     while (true) {
-        str_len = read(clnt_sock, msg, strlen(msg) + 1);
+        str_len = read(clnt_sock, msg, sizeof(msg));
         if (str_len == -1) {
             printf("clnt[%d] close\n", clnt_sock);
             break;

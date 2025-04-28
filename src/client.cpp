@@ -37,15 +37,15 @@ int main(int argc, char const *argv[]) {
     } else {
         printf("Connected\n");
     }
-    char msg[100];
-    sprintf(msg, "[%s]: hello world\n", id);
+    char msg[200];
+    sprintf(msg, "[%s] : hello world\n", id);
     printf("while before");
 
     while (true) {
 
         printf("send: %s\n", msg);
         write(sock, msg, strlen(msg) + 1);
-        sleep(1);
+        sleep(2);
     }
     printf("while after");
     close(sock);
