@@ -1,4 +1,5 @@
 #include <arpa/inet.h>
+#include <iostream>
 #include <netinet/in.h>
 #include <pthread.h>
 #include <string.h>
@@ -6,36 +7,47 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <cstdlib>
-#include <iostream>
-
 int main(int argc, char const *argv[]) {
-  struct sockaddr_in serv_addr;
-  int sock;
-  char msg[100];
+    int sock;
+    struct sockaddr_in serv_addr;
+    pthread_t snd_thread, rcv_thread;
+    void *thread_result;
 
-  sock = socket(PF_INET, SOCK_STREAM, 0);
+    char id[100];
+    strcpy(id, argv[1]);
+    printf("id: %s\n", id);
 
-  if (sock == -1) printf("socket Error\n");
 
-  memset(&serv_addr, 0, sizeof(serv_addr));
+    sock = socket(PF_INET, SOCK_STREAM, 0);
 
-  serv_addr.sin_family = AF_INET;  // tcp
-  serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-  serv_addr.sin_port = htons(7889);
+    if (sock == -1)
+        printf("socket Error\n");
+    else {
+        printf("Socket successfully created\n");
+    }
 
-  if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) == -1) {
-    printf("connect Error\n");
-  }
+    memset(&serv_addr, 0, sizeof(serv_addr));
 
-  while (1) {
-    scanf("%s", msg);
-    printf("send: %s\n", msg);
-    write(sock, msg, 100);
-    sleep(1);
-    memset(msg, 0, sizeof(msg));
-  }
+    serv_addr.sin_family = AF_INET; // tcp
+    serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    serv_addr.sin_port = htons(7889);
 
-  close(sock);
-  return 0;
+    if (connect(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == -1) {
+        printf("connect Error\n");
+    } else {
+        printf("Connected\n");
+    }
+    char msg[100];
+    sprintf(msg, "[%s]: hello world\n", id);
+    printf("while before");
+
+    while (true) {
+
+        printf("send: %s\n", msg);
+        write(sock, msg, strlen(msg) + 1);
+        sleep(1);
+    }
+    printf("while after");
+    close(sock);
+    return 0;
 }
