@@ -18,7 +18,7 @@ void *thread1(void *arg) {
     }
     return NULL;
 }
-// thread
+// 운영체제마다 스레드 스케줄링 다르다. 염두해 두기
 
 int main(int argc, char *argv[]) {
     pthread_t s_thread[2];
