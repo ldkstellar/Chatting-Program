@@ -7,16 +7,19 @@
 #include <unistd.h>
 
 #include <iostream>
+
 void *rcv(void *arg) {
-  printf("rcv thread created");
-  int sock = *static_cast<int *>(arg);
+  int sock = *reinterpret_cast<int *>(arg);
   char buff[500];
   int len;
   while (true) {
-    /* code */
     len = read(sock, buff, sizeof(buff));
     if (len == -1) {
-      printf("sock close");
+      printf("sock close\n");
+      break;
+    }
+    if (len == 0) {
+      printf("sock close\n");
       break;
     }
     printf("%s", buff);
